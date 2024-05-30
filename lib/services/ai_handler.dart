@@ -1,8 +1,9 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AIHandler {
   final _openAI = OpenAI.instance.build(
-    token: '<your api key>',
+    token: dotenv.env['OPENAI_APIKEY'],
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
