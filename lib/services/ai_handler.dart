@@ -1,5 +1,12 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const chat_context = {"role": "system", "content": "You are a German teacher"};
+
+var previous_messages = [
+  chat_context,
+];
 
 class AIHandler {
   final _openAI = OpenAI.instance.build(
@@ -12,16 +19,24 @@ class AIHandler {
 
   Future<String> getResponse(String message) async {
     try {
-      final request = ChatCompleteText(messages: [
-        Map.of({"role": "user", "content": message})
-      ], maxToken: 200, model: kChatGptTurbo0301Model);
+      final outgoing_message = {"role": "user", "content": message};
+      previous_messages.add(outgoing_message);
+      final request = ChatCompleteText(
+          messages: previous_messages,
+          maxToken: 200,
+          model: kChatGptTurbo0301Model);
 
       final response = await _openAI.onChatCompletion(request: request);
       if (response != null) {
-        return response.choices[0].message.content.trim();
+        final incoming_message = {
+          "role": "assistant",
+          "content": response.choices[0].message.content
+        };
+        previous_messages.add(incoming_message);
+        return response.choices[0].message.content;
       }
 
-      return 'Some thing went wrong';
+      return 'Something went wrong';
     } catch (e) {
       return 'Bad response';
     }
