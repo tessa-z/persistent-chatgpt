@@ -1,8 +1,7 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-const chat_context = {"role": "system", "content": "You are a German teacher"};
+const chat_context = {"role": "system", "content": "You are a happy person who loves life."};
 
 var previous_messages = [
   chat_context,
